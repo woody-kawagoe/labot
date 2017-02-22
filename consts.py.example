@@ -1,0 +1,5 @@
+SLACK_TOKEN = ''
+USERNAME = ''
+CHANNEL = ''
+EMOJI = ''
+QUERY = 'is:unread'

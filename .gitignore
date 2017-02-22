@@ -1,0 +1,6 @@
+__pycache__/
+*.py.bak
+*.pyc
+consts.py
+client_secret.json
+gmail.auth.storage
