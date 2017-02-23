@@ -4,3 +4,4 @@ __pycache__/
 consts.py
 client_secret.json
 gmail.auth.storage
+output.txt
