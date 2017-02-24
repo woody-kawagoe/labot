@@ -1,4 +1,5 @@
 SLACK_TOKEN = ''
+JSON_PATH = ''
 USERNAME = ''
 CHANNEL = ''
 EMOJI = ''

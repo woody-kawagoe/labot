@@ -8,6 +8,7 @@ import base64
 from slackclient import SlackClient
 from consts import (
     SLACK_TOKEN,
+    JSON_PATH,
     USERNAME,
     CHANNEL,
     EMOJI,
@@ -16,7 +17,7 @@ from consts import (
 
 
 def get_mail():
-    f = open('client_secret.json')
+    f = open(JSON_PATH)
     auth_info = json.load(f)
 
     user = 'me'
