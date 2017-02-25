@@ -8,22 +8,19 @@ import base64
 from slackclient import SlackClient
 from consts import (
     SLACK_TOKEN,
-    JSON_PATH,
+    DIR_PATH,
     USERNAME,
-    CHANNEL,
-    EMOJI,
-    QUERY
+    EMOJI
 )
 
 
-def get_mail():
-    f = open(JSON_PATH)
+def get_mail(query="is:unread"):
+    f = open(DIR_PATH + "client_secret.json")
     auth_info = json.load(f)
 
     user = 'me'
     api = GmailApi(auth_info)
     # 初回実行時は認証が求められます。
-    query = QUERY
 
     maillist = api.getMailList(user, query)
     if maillist['resultSizeEstimate'] > 0:
@@ -57,7 +54,7 @@ def parse_mail(content):
     return mail
 
 
-def send_slack(title, text):
+def send_slack(title, text, channel):
     sc = SlackClient(SLACK_TOKEN)
     attachments = [{
         'title': title,
@@ -67,19 +64,23 @@ def send_slack(title, text):
     }]
     sc.api_call(
         "chat.postMessage",
-        channel=CHANNEL,
+        channel=channel,
         username=USERNAME,
         attachments=attachments,
         icon_emoji=EMOJI
     )
 
 if __name__ == "__main__":
-    mail = get_mail()
+    argvs = sys.argv
+    query = argvs[1]
+    channel = argvs[2]
+    mail = get_mail(query)
     if mail:
         print("メール受信")
         print(mail['date'])
         print(mail['subject'])
+        print(channel)
         text = mail['date'] + '\n' + mail['body']
-        send_slack(mail['subject'], text)
+        send_slack(mail['subject'], text, channel)
     else:
         print("未読メールなし")

@@ -1,6 +1,4 @@
 SLACK_TOKEN = ''
-JSON_PATH = ''
+DIR_PATH = ''
 USERNAME = ''
-CHANNEL = ''
 EMOJI = ''
-QUERY = 'is:unread'
