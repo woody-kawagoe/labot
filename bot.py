@@ -36,7 +36,10 @@ def get_mail(query="is:unread"):
 def parse_mail(content):
     mail = {}
 
-    raw_body = content['payload']['parts'][0]['body']['data']
+    if 'parts' in content['payload'].keys():
+        raw_body = content['payload']['parts'][0]['body']['data']
+    else:
+        raw_body = content['payload']['body']['data']
     mail['body'] = base64.urlsafe_b64decode(raw_body).decode('utf-8')
     mail['snippet'] = content['snippet']
 
