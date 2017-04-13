@@ -10,6 +10,8 @@ from consts import (
     SLACK_TOKEN,
     DIR_PATH,
     USERNAME,
+    CHANNEL,
+    QUERY,
     EMOJI
 )
 
@@ -75,8 +77,12 @@ def send_slack(title, text, channel):
 
 if __name__ == "__main__":
     argvs = sys.argv
-    query = argvs[1]
-    channel = argvs[2]
+    if len(argvs) == 3:
+        query = argvs[1]
+        channel = argvs[2]
+    else:
+        query = QUERY
+        channel = CHANNEL
     mail = get_mail(query)
     if mail:
         print("メール受信")
