@@ -39,7 +39,10 @@ def parse_mail(content):
     mail = {}
 
     if 'parts' in content['payload'].keys():
-        raw_body = content['payload']['parts'][0]['body']['data']
+        if 'parts' in content['payload']['parts'][0].keys():
+            raw_body = content['payload']['parts'][0]['parts'][0]['body']['data']
+        else:
+            raw_body = content['payload']['parts'][0]['body']['data']
     else:
         raw_body = content['payload']['body']['data']
     mail['body'] = base64.urlsafe_b64decode(raw_body).decode('utf-8')
@@ -78,18 +81,20 @@ def send_slack(title, text, channel):
 if __name__ == "__main__":
     argvs = sys.argv
     if len(argvs) == 3:
-        query = argvs[1]
+        query = [argvs[1]]
         channel = argvs[2]
     else:
         query = QUERY
         channel = CHANNEL
-    mail = get_mail(query)
-    if mail:
-        print("メール受信")
-        print(mail['date'])
-        print(mail['subject'])
-        print(channel)
-        text = mail['date'] + '\n' + mail['body']
-        send_slack(mail['subject'], text, channel)
-    else:
-        print("未読メールなし")
+    for q in query:
+        print(q)
+        mail = get_mail(query)
+        if mail:
+            print("メール受信")
+            print(mail['date'])
+            print(mail['subject'])
+            print(channel)
+            text = mail['date'] + '\n' + mail['body']
+            send_slack(mail['subject'], text, channel)
+        else:
+            print("未読メールなし")
