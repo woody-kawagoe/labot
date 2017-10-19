@@ -149,16 +149,15 @@ class GmailServiceFactory():
     def createService(self, auth_info):
         STORAGE = Storage('gmail.auth.storage')
         credent = STORAGE.get()
-
         if credent is None or credent.invalid:
-                info = auth_info['installed']
-                flow = OAuth2WebServerFlow(info["client_id"], info["client_secret"], response_setting["scope"], info["redirect_uris"][0])
-                auth_url = flow.step1_get_authorize_url()
-                # ブラウザを開いて認証する
-                webbrowser.open(auth_url)
-                code = input("input code : ")
-                credent = flow.step2_exchange(code)
-                STORAGE.put(credent)
+            info = auth_info['installed']
+            flow = OAuth2WebServerFlow(info["client_id"], info["client_secret"], response_setting["scope"], info["redirect_uris"][0])
+            auth_url = flow.step1_get_authorize_url()
+            # ブラウザを開いて認証する
+            webbrowser.open(auth_url)
+            code = input("input code : ")
+            credent = flow.step2_exchange(code)
+            STORAGE.put(credent)
         http = httplib2.Http()
         http = credent.authorize(http)
 

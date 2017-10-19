@@ -39,10 +39,11 @@ def parse_mail(content):
     mail = {}
 
     if 'parts' in content['payload'].keys():
-        if 'parts' in content['payload']['parts'][0].keys():
-            raw_body = content['payload']['parts'][0]['parts'][0]['body']['data']
+        parts = content['payload']['parts'][0]
+        if 'parts' in parts.keys():
+            raw_body = parts['parts'][0]['body']['data']
         else:
-            raw_body = content['payload']['parts'][0]['body']['data']
+            raw_body = parts['body']['data']
     else:
         raw_body = content['payload']['body']['data']
     mail['body'] = base64.urlsafe_b64decode(raw_body).decode('utf-8')
