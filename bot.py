@@ -23,7 +23,6 @@ def get_mail(query="is:unread"):
     user = 'me'
     api = GmailApi(auth_info)
     # 初回実行時は認証が求められます。
-
     maillist = api.getMailList(user, query)
     if maillist['resultSizeEstimate'] > 0:
         mail_id = maillist["messages"][0]['id']
@@ -89,7 +88,7 @@ if __name__ == "__main__":
         channel = CHANNEL
     for q in query:
         print(q)
-        mail = get_mail(query)
+        mail = get_mail(q)
         if mail:
             print("メール受信")
             print(mail['date'])
