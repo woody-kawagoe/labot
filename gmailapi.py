@@ -4,12 +4,11 @@
 import sys
 from apiclient.discovery import build
 import webbrowser
-from apiclient.discovery import build
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
 # from oauth2client.tools import run
 import httplib2
-
+from apiclient import errors
 from multiprocessing import Process, Value
 
 import base64
@@ -38,23 +37,20 @@ class GmailApi():
 
     def sendMessage(self, user, message):
         """メールを送信します。messageの作り方はcreateMesage関数を参照
-
             Keyword arguments:
             user -- meを指定する。
             message -- createMessageで生成したオブジェクトを渡す必要があります
-
             Returns: None
         """
         try:
-                message = (self.service.users().messages().send(userId=user, body=message).execute())
-                return message
+            message = (self.service.users().messages().send(userId=user, body=message).execute())
+            return message
         except errors.HttpError as error:
-                print('An error occurred:s' % error)
+            print('An error occurred:s' % error)
 
     def getMailList(self, user, qu):
         ''' メールの情報をリストで取得します
           quの内容でフィルタリングする事が出来ます
-
            Keyword arguments:
            user -- me又はgoogleDevloperに登録されたアドレスを指定します。
            qu -- queryを設定します
@@ -75,15 +71,13 @@ class GmailApi():
         try:
             return self.service.users().messages().list(userId=user, q=qu).execute()
         except errors.HttpError as error:
-            reconnect()
+            self.reconnect()
 
     def getMailContent(self, user, i):
         """指定したメールのIDからメールの内容を取得します。
-
                 Keyword arguments:
                 user -- meを指定する。
                 i -- メールのId getMailList()等を使用して取得したIdを使用する
-
                 Returns: メールの内容を辞書型で取得する
                 詳細は以下
                 http://developers.google.com/apis-explorer/#p/gmail/v1/gmail.users.messages.get
@@ -91,14 +85,13 @@ class GmailApi():
         try:
             return self.service.users().messages().get(userId=user, id=i).execute()
         except errors.HttpError as error:
-            reconnect()
+            self.reconnect()
 
     def doMailAsRead(self, user, i):
         """指定したメールのIDを既読にします
             Keyword arguments:
             user -- meを指定する。
             i -- メールのId getMailList()等を使用して取得したIdを使用する
-
             Returns:　なし
         """
         query = {"removeLabelIds": ["UNREAD"]}
@@ -111,7 +104,6 @@ class GmailApi():
             to -- メールのId getMailList()等を使用して取得したIdを使用する
             subject -- 件名
             message_text --　メールの内容
-
             Returns:　なし
         """
         message = MIMEText(message_text)
@@ -125,19 +117,19 @@ class GmailApi():
             content = self.getMailContent(user, i)
             return ([header for header in content["payload"]["headers"] if header["name"] == key])[0]["value"]
         except errors.HttpError as error:
-            reconnect()
+            self.reconnect()
 
     def getMailFrom(self, user, i):
         try:
             return self.expMailContents(user, i, "From")
         except errors.HttpError as error:
-            reconnect()
+            self.reconnect()
 
     def getMailSubject(self, user, i):
         try:
             return self.expMailContents(user, i, "Subject")
         except errors.HttpError as error:
-            reconnect()
+            self.reconnect()
 
     def __init__(self, auth_info):
         self.auth_info = auth_info
